@@ -1,3 +1,7 @@
+/*Faça um programa que preencha dois vetores com cinco elementos numéricos cada e, depois, ordene-
+-os de maneira crescente. Deverá ser gerado um terceiro vetor com dez posições, composto pela junção 
+dos elementos dos vetores anteriores, também ordenado de maneira crescente.*/
+
 #include<stdio.h>
 
 int main(){
