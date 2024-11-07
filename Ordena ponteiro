@@ -28,9 +28,12 @@ int ordena (int *x, int *y, int *z){
 }
 
 int main(){
-    int x =2;
-    int y =3;
-    int z = 4;
+    int x;
+    int y;
+    int z;
+    scanf("%d", &x);
+    scanf("%d", &y);
+    scanf("%d", &z);
     int r = ordena(&x, &y, &z);
     printf("%d\n", r);
     printf("%d %d %d", x, y, z);
