@@ -21,7 +21,7 @@ int main(){
     imprimir(vet,cont);
     printf("\nOS NUMEROS SORTEADOS: ");
     imprimir(lot, 6);
-
+    free(vet);
 }
 
 void preencher(int *vet, int n){
