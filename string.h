@@ -91,6 +91,6 @@ void *copia(char *str, char *str2){
         *(str2+i) = *(str+i);
         i++;
     }
-    *(str+i) = '\0';
+    *(str2+i) = '\0';
     printf("%s\n", str2);
 }
