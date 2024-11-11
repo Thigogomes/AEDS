@@ -1,0 +1,79 @@
+/* Elabore um programa que preencha uma matriz 10 x 10 com números inteiros, execute as trocas especificadas a seguir e mostre a matriz resultante:
+■■ a linha 2 com a linha 8; 
+■■ a coluna 4 com a coluna 10; 
+■■ a diagonal principal com a diagonal secundária; 
+■■ a linha 5 com a coluna 10*/
+
+#include<stdio.h>
+#include<stdlib.h>
+
+void preencher(int mat[][10]){
+    for(int i = 0; i < 10; i++){
+        for(int j = 0; j < 10; j++){
+            mat[i][j] = rand()%10;
+        }
+    }
+}
+
+void imprimir(int mat[][10]){
+    for(int i = 0; i < 10; i++){
+        for(int j = 0; j < 10; j++){
+            printf("%d ", mat[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void substituiLinha(int mat[][10]){
+    int aux[10][10];
+     for(int i = 0; i < 10; i++){
+        aux[1][i] = mat[1][i];
+        mat[1][i] = mat[7][i];
+        mat[7][i] = aux[1][i];
+    }
+}
+
+void substituiColuna(int mat[][10]){
+    int aux[10][10];
+     for(int i = 0; i < 10; i++){
+        aux[i][3] = mat[i][3];
+        mat[i][3] = mat[i][9];
+        mat[i][9] = aux[i][3];
+    }
+}
+
+void substituiLC(int mat[][10]){
+    int aux;
+     for(int i = 0; i < 10; i++){
+        aux = mat[4][i];
+        mat[4][i] = mat[i][9];
+        mat[i][9] = aux;
+    }
+}
+
+void substituiDiagonal(int mat[][10]){
+    int aux;
+    for(int i = 0; i < 10; i++){
+        aux = mat[i][i];
+        mat[i][i] = mat[i][9-i];
+        mat[i][9-i] = aux;
+    }
+}
+
+int main(){
+    int mat[10][10], n;
+    preencher(mat);
+    imprimir(mat);
+    substituiLinha(mat);
+    printf("\n");
+    imprimir(mat);
+    printf("\n");
+    substituiColuna(mat);
+    imprimir(mat);
+    printf("\n");
+    substituiLC(mat);
+    imprimir(mat);
+    printf("\n");
+    substituiDiagonal(mat);
+    imprimir(mat);
+}
