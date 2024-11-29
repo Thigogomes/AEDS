@@ -1,0 +1,105 @@
+#include<stdio.h>
+#include<locale.h>
+#include<string.h>
+#include <ctype.h>
+
+typedef struct ingredientes{
+    int id;
+    char nome[100];
+    float preco;
+}Ingredientes;
+
+typedef struct pizzas{
+    int id;
+    char nome[100];
+    char tamanho;
+    struct ingredientes ingrediente[10];
+}Pizzas;
+
+void cadastrarPizzas(char c[]);
+
+void visualizarPizzas(char c[]){
+    Pizzas p;
+    int cont = 0;
+    FILE *cardapio = fopen(c, "r");
+    if(cardapio){
+        printf("\n=====================================================\n");
+        printf("Cardapio");
+        printf("\n=====================================================\n\n");
+        while(fscanf(cardapio, "%d\n%100[^\n]\n%c\n", &p.id, p.nome, &p.tamanho) == 3){
+            printf("ID: %d\n", p.id);
+            printf("Nome: %s\n", p.nome);
+            printf("Tamanho: %c\n", p.tamanho);
+
+            for(int i = 0; i < 10; i++){
+                if(fscanf(cardapio, "%100[^\n]\n", p.ingrediente[i].nome) == 1){
+                    printf("Ingrediente %d: %s\n", i+1, p.ingrediente[i].nome);
+                }
+            }
+        }
+        fclose(cardapio);
+    }else{
+        printf("Erro ao abrir o arquivo!");
+    }
+}
+
+void excluirPizza(char c[]){
+    FILE *cardapio = fopen(c, "r+");
+    if(cardapio){
+
+    }else{
+        printf("Erro ao excluir!");
+    }
+}
+
+int main(){
+    setlocale(LC_ALL, "Portuguese");
+    char *cardapio = ("cardapio.txt");
+    //cadastrarPizzas(cardapio);
+    visualizarPizzas(cardapio);
+}
+
+void cadastrarPizzas(char c[]){
+    Pizzas p;
+    int opcao = 1, i = 0;
+    FILE *cardapio = fopen(c, "a");
+    printf("\n=====================================================\n");
+    printf("Cadastro de Pizzas");
+    printf("\n=====================================================\n\n");
+    if(cardapio){
+        printf("Digite o id da pizza: ");
+        scanf("%d", &p.id);
+        getchar();
+        printf("Digite o nome da pizza: ");
+        scanf("%100[^\n]", p.nome);
+        getchar();
+        printf("Digite o tamanho da pizza: ");
+        scanf(" %c", &p.tamanho);
+        getchar();
+        if(p.tamanho != 'P'&& p.tamanho != 'M' && p.tamanho != 'G'){
+            while(p.tamanho != 'P'&& p.tamanho != 'M' && p.tamanho != 'G'){
+                printf("Digite o tamanho da pizza: ");
+                scanf(" %c", &p.tamanho);
+                getchar();
+            }
+        }
+        printf("Digite o %d ingrediente da pizza(Digite um unico caractere para parar): ", i+1);//talvez colocar um sistema para ver se o ingrediente exite
+        scanf("%100[^\n]", p.ingrediente[i].nome);
+        getchar();
+        while(strlen(p.ingrediente[i].nome) > 1){
+            i++;
+            printf("Digite o %d ingrediente da pizza: ", i+1);
+            scanf("%100[^\n]", p.ingrediente[i].nome);
+            getchar();
+        }
+        fprintf(cardapio, "%d\n", p.id);
+        fprintf(cardapio, "%s\n", p.nome);
+        fprintf(cardapio, "%c\n", p.tamanho);
+        for(int j = 0; j < i; j++){
+            fprintf(cardapio, "%s\n", p.ingrediente[j].nome);
+        }
+    fclose(cardapio);
+    }else{
+        printf("Erro ao cadastrar!");
+    }
+}
