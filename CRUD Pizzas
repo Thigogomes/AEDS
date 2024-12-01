@@ -18,21 +18,137 @@ typedef struct pizzas{
 void cadastrarPizzas(char c[]);
 void visualizarPizzas(char c[]);
 void excluirPizza(char c[]);
+void editarPizza(char c[]);
 
 void editarPizza(char c[]){
+    Pizzas p;
     char *t = ("temp4.txt");
     char ingrediente[100];
-    int i = 0;
+    int id_editar, i = 0, opcao, k = 0;
     FILE *cardapio = fopen(c, "r");
     FILE *temporaria = fopen(t, "w");
+    printf("\n=====================================================\n");
+    printf("Digite o ID do pizza que deseja editar: ");
+    printf("\n=====================================================\n\n");
+    scanf("%d", &id_editar);
+    if(cardapio){
+        while(fscanf(cardapio, "%d\n%[^\n]\n%c\n", &p.id, p.nome, &p.tamanho) == 3){
+            if(id_editar != p.id){
+                fprintf(temporaria, "%d\n", p.id);
+                fprintf(temporaria, "%s\n", p.nome);
+                fprintf(temporaria, "%c\n", p.tamanho);
+                int y = 1;
+                while(fscanf(cardapio, "%100[^\n]\n", ingrediente) == 1 && y == 1){
+                    if(isdigit(ingrediente[0])){
+                        fseek(cardapio, -strlen(ingrediente) - 3, SEEK_CUR);
+                        y = 0;
+                    }else{
+                        fprintf(temporaria, "%s\n", ingrediente);
+                    }
+                }
+            }else{
+                i++;
+                printf("\n-------------Informacoes Atuais da Pizza:-------------\n\n");
+                printf("%d\n", p.id);
+                printf("%s\n", p.nome);
+                printf("%c\n", p.tamanho);
+                int y = 1;
+                while(fscanf(cardapio, "%100[^\n]\n", ingrediente) == 1 && y == 1){
+                    if(isdigit(ingrediente[0])){
+                        fseek(cardapio, -strlen(ingrediente) - 3, SEEK_CUR);
+                        y = 0;
+                    }else{
+                        printf("- %s\n", ingrediente);
+                    }
+                }
+                printf("\n-----------------------------------------------------\n\n");
+                printf("Digite o novo ID: ");
+                scanf("%d", &p.id);
+                getchar();
+                printf("Digite o novo nome: ");
+                scanf("%100[^\n]", p.nome);
+                getchar();
+                printf("Digite o novo tamanho da pizza: ");
+                scanf(" %c", &p.tamanho);
+                getchar();
+                if(p.tamanho != 'P'&& p.tamanho != 'M' && p.tamanho != 'G'){
+                    while(p.tamanho != 'P'&& p.tamanho != 'M' && p.tamanho != 'G'){
+                        printf("Digite o novo tamanho da pizza: ");
+                        scanf(" %c", &p.tamanho);
+                        getchar();
+                    }
+                }
+                fprintf(temporaria, "%d\n", p.id);
+                fprintf(temporaria, "%s\n", p.nome);
+                fprintf(temporaria, "%c\n", p.tamanho);
+
+                printf("Deseja adicionar (digite 1) ou refazer a lista de ingredientes(digite 2): ");
+                scanf("%d", &opcao);
+                while(opcao != 1 && opcao != 2){
+                    printf("Deseja adicionar (digite 1) ou refazer a lista de ingredientes(digite 2): ");
+                    scanf("%d", &opcao);
+                }
+                getchar();
+                if(opcao == 1){
+                    y = 1;
+                    while(fscanf(cardapio, "%100[^\n]\n", ingrediente) == 1 && y == 1){
+                        if(isdigit(ingrediente[0])){
+                            fseek(cardapio, -strlen(ingrediente) - 3, SEEK_CUR);
+                            y = 0;
+                        }else{
+                            fprintf(temporaria, "%s\n", ingrediente);
+                        }
+                    }
+                    printf("Digite o novo ingrediente da pizza(Digite ENTER para finalizar): ");
+                    scanf("%100[^\n]", p.ingrediente[k].nome);
+                    getchar();
+                    while(strlen(p.ingrediente[k].nome) > 0){
+                        k++;
+                        printf("Digite outro novo ingrediente da pizza: ");
+                        scanf("%100[^\n]", p.ingrediente[k].nome);
+                        getchar();
+                    }
+                    for(int j = 0; j < k; j++){
+                        fprintf(temporaria, "%s\n", p.ingrediente[j].nome);
+                    }
+                }else{
+                    printf("Digite o %d ingrediente da pizza(Digite um unico caractere para parar): ", k+1);
+                    scanf("%100[^\n]", p.ingrediente[k].nome);
+                    getchar();
+                    while(strlen(p.ingrediente[k].nome) > 1){
+                        k++;
+                        printf("Digite o %d ingrediente da pizza: ", k+1);
+                        scanf("%100[^\n]", p.ingrediente[k].nome);
+                        getchar();
+                    }
+                    for(int j = 0; j < k; j++){
+                        fprintf(temporaria, "%s\n", p.ingrediente[j].nome);
+                    }
+                }
+
+            }
+        }
+    }else{
+        printf("Erro ao editar o arquivo!");
+    }
+    fclose(cardapio);
+    fclose(temporaria);
+    if(i == 1){
+        remove(c);
+        rename(t, c);
+        printf("Pizza editada com sucesso!\n");
+    }else{
+        printf("Pizza nao encontrada!");
+    }
 }
 
 int main(){
     char *cardapio = ("cardapio.txt");
-    cadastrarPizzas(cardapio);
     //cadastrarPizzas(cardapio);
-    //visualizarPizzas(cardapio);
+    //cadastrarPizzas(cardapio);
+    visualizarPizzas(cardapio);
     //excluirPizza(cardapio);
+    editarPizza(cardapio);
     visualizarPizzas(cardapio);
 }
 
@@ -60,10 +176,10 @@ void cadastrarPizzas(char c[]){
                 getchar();
             }
         }
-        printf("Digite o %d ingrediente da pizza(Digite um unico caractere para parar): ", i+1);//talvez colocar um sistema para ver se o ingrediente exite
+        printf("Digite o %d ingrediente da pizza(Digite ENTER para finalizar): ", i+1);//talvez colocar um sistema para ver se o ingrediente exite
         scanf("%100[^\n]", p.ingrediente[i].nome);
         getchar();
-        while(strlen(p.ingrediente[i].nome) > 1){
+        while(strlen(p.ingrediente[i].nome) > 0){
             i++;
             printf("Digite o %d ingrediente da pizza: ", i+1);
             scanf("%100[^\n]", p.ingrediente[i].nome);
